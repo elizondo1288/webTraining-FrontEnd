@@ -1,0 +1,10 @@
+.css-form input.ng-invalid.ng-touched{
+	border: 1px solid red;
+}
+.css-form p {
+	color: red;
+}
+
+.css-form input.ng-pristine{
+	border: 1px solid white;
+}
