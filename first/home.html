@@ -65,8 +65,7 @@
             <div class="panel-body">
 
                 <form name="addContactForm"  ng-submit="addNewContact(nameF,adressF,emailF,phoneF)" class="form-vertical css-form" novalidate>
-                    <p>Pristine: {{addContactForm.$pristine}}</p>
-
+                    
                     <label>User Name</label>
                     <input name="name" type="text" ng-model="nameF" class="form-control" placeholder="Esteban Elizondo" required/>
                     <p ng-show="addContactForm.name.$dirty && addContactForm.name.$invalid">Your name is required.</p>

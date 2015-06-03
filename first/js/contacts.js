@@ -36,6 +36,9 @@
                 $scope.emailF='';
                 $scope.phoneF='';
                 $scope.addContactForm.$setPristine();
+                $scope.addContactForm.$setUntouched();
+                
+                
                 
         };
 

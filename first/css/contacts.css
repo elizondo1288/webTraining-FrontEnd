@@ -5,6 +5,7 @@
 	color: red;
 }
 
-.css-form input.ng-pristine{
-	border: 1px solid white;
+css-form input.ng-touched.ng-pristine.ng-invalid.ng-invalid-required{
+	border: 1px solid #ccc;
 }
+
