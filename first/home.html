@@ -13,9 +13,9 @@
 
 <body ng-controller="ContactsCtrl">
 
-    <div class="container" style="margin-top:1%;">
+    <div class="container" style="margin-top:2%;">
         
-        <div class="panel panel-default">
+        <div class="panel panel-default hidden-xs">
             <div class="panel-heading">
                 <h3 class="panel-title">Welcome to Your Contacts List</h3>
             </div>
@@ -33,9 +33,24 @@
 
         <div class="panel panel-default" ng-show="visibililtyList">
             <div class="panel-heading">
-                <h3 class="panel-title">Contacts List</h3>
+                <p class="panel-title">Contacts List
+                    <button type="button" class="btn btn-default pull-right btn-sm visible-xs" ng-click="presentDiv(2)">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 
+                    </button>
+                </p>
+                
             </div>
-            <div class="panel-body">
+            <div class="panel-body css-table">
+
+                <!-- Search Bar Code -->
+                <h5>Search your contact:</h5>
+                <div class="input-group">
+                  <input type="text" ng-model="searchString" class="form-control" placeholder="Search for...">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">Go!</button>
+                  </span>
+                </div><!-- /end of search bar code -->
+                <br/>
                 <table class="table table-striped">
                     <thead>
                         <tr class="info">
@@ -43,27 +58,72 @@
                             <th class="hidden-xs hidden-md hidden-sm">Address</th>
                             <th class="hidden-xs">Email</th>
                             <th>Phone</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="item in model.contacts">
-                            <td>{{item.name}}</td>
-                            <td class="hidden-xs hidden-md hidden-sm">{{item.address}}</td>
-                            <td class="hidden-xs">{{item.email}}</td>
-                            <td>{{item.phone}}</td>
+                            <tr ng-repeat="item in model.contacts | filter:searchString">
+                            
+                            <td>
+                                {{item.name}}
+                                <div ng-show="item.updating">
+                                    <br/>
+                                    <input ng-show="item.updating" type="text" ng-model="item.name"/>
+                                </div>
+                            </td>
+                            <td class="hidden-xs hidden-md hidden-sm">
+                                {{item.address}}
+                                <div ng-show="item.updating">
+                                    <br/>
+                                    <input type="text" ng-model="item.address"/>
+                                </div>
+                            </td>
+                            <td class="hidden-xs">
+                                {{item.email}}
+                                <div ng-show="item.updating">
+                                    <br/>
+                                    <input type="text" ng-model="item.email"/>
+                                </div>
+                            </td>
+                            <td>
+                                {{item.phone}}
+                                <div ng-show="item.updating">
+                                    <br/>
+                                    <input type="text" ng-model="item.phone"/>
+                                </div>
+                            </td>
+                            <td>
+
+                                <div class="btn-group" role="group">
+                                  <button type="button" class="btn btn-default btn-md" ng-click="deleteContact(item)">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 
+                                  </button>
+                                  <button type="button" class="btn btn-default btn-md" ng-click="updateContact(item)">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 
+                                  </button>
+                                </div> 
+                                
+                            </td>
                         </tr>
                     </tbody>
                 </table>
+               
             </div>
         </div>
 
         <div class="panel panel-default" ng-show="visibililtyAdd">
 
             <div class="panel-heading">
-                <h3 class="panel-title">Add Contact</h3>
+                <p class="panel-title">Add Contact
+                    <button type="button" class="btn btn-default pull-right btn-sm visible-xs" ng-click="presentDiv(1)">
+                        <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 
+                    </button>
+                </p>
             </div>
             <div class="panel-body">
-
+                <div ng-show="wasInserted" class="alert alert-success" role="alert">
+                    Contact was successfully added!
+                </div>
                 <form name="addContactForm"  ng-submit="addNewContact(nameF,adressF,emailF,phoneF)" class="form-vertical css-form" novalidate>
                     
                     <label>User Name</label>

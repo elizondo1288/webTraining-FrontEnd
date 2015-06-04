@@ -1,0 +1,23 @@
+{
+  "name": "first Example",
+  "version": "1.0.0",
+  "homepage": "https://github.com/elizondo1288/webTraining-FrontEnd",
+  "authors": [
+    "Esteban <elizondo1288@gmail.com>"
+  ],
+  "description": "first excercise for angular",
+  "main": "home.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.0",
+    "bootstrap": "~3.3.4",
+    "jquery": "~2.1.4"
+  }
+}
