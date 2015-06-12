@@ -1,0 +1,51 @@
+<div class="panel panel-default">
+
+            <div class="panel-heading">
+                <p class="panel-title">User Detail
+                    <button type="button" class="btn btn-default pull-right btn-sm visible-xs" ng-click="presentDiv(1)">
+                        <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 
+                    </button>
+                </p>
+            </div>
+            <div class="panel-body">
+                
+                <form name="updateContactForm"  ng-submit="updateNewContact(selectedContact)" class="form-vertical css-form" novalidate>
+                    
+                    <a class="btn btn-primary pull-right" href="#/">Back</a>
+                    
+                    <button type="button" class="btn btn-primary pull-right" ng-click="changeUpdate()"> Edit </button>
+                    <br/>
+
+                    <div ng-hide="isUpdating">
+
+                        <h5>{{selectedContact.name}}</h5>
+                        <h5>{{selectedContact.address}}</h5>
+                        <h5>{{selectedContact.email}}</h5>
+                        <h5>{{selectedContact.phone}}</h5>                        
+                    </div>
+
+                    <div ng-show="isUpdating">
+                        <label>User Name</label>
+                        <input name="name" type="text" ng-model="selectedContact.name" class="form-control" placeholder="Esteban Elizondo" required/>
+                        <p ng-show="updateContactForm.name.$dirty && updateContactForm.name.$invalid">Your name is required.</p>
+
+                        <label>Address</label>
+                        <input name="adress" type="text" ng-model="selectedContact.address" class="form-control" placeholder="San Jose Costa Rica" required/>
+                        <p ng-show="updateContactForm.adress.$dirty && updateContactForm.adress.$invalid">Your address is required.</p>
+
+                        <label>Email</label>
+                        <input name="email" type="email" ng-model="selectedContact.email" class="form-control" placeholder="example@gmail.com" required/>
+                        <p ng-show="updateContactForm.email.$dirty && updateContactForm.email.$invalid">Your email is required with a valid format.</p>
+
+                        <label>Phone</label>
+                        <input name="phone" Phone="tel" ng-model="selectedContact.phone" class="form-control" placeholder="8888-7676"required/>
+                        <p ng-show="updateContactForm.phone.$dirty && updateContactForm.phone.$invalid">Your phone is required.</p>
+                        <br/>
+                        <button type="submit" class="btn btn-primary pull-right" ng-disabled="updateContactForm.$invalid">Update</button>
+                    </div>
+
+                    
+
+                </form>
+            </div>
+        </div>

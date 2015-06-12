@@ -17,6 +17,9 @@
             .when('/add',{
                 templateUrl:'partials/add.html'
             })
+            .when('/detailupdate',{
+                templateUrl:'partials/detailupdate.html'
+            })
             .otherwise({
                 redirectTo:'/'
             })
@@ -37,10 +40,12 @@
         $scope.visibililtyList = true;
 
         $scope.wasInserted = false;
+        $scope.isUpdating = false;
+
         $scope.tab = 1;
         
         $scope.$on('$routeChangeSuccess', function() {
-            if ($location.path() == '/') {
+            if (($location.path() == '/')||($location.path() == '/detailupdate')) {
                 $scope.tab = 1;
             }else{
                 $scope.tab = 2;
@@ -50,6 +55,14 @@
         
         $scope.isSelected=function(checkTab){
         return $scope.tab === checkTab;
+        };
+
+        $scope.changeUpdate = function(){
+            if($scope.isUpdating){
+                $scope.isUpdating = false;
+            } else{
+                $scope.isUpdating = true;
+            }
         };
 
         $scope.addNewContact = function (nam, add, em, ph) {
@@ -68,11 +81,9 @@
 
         $scope.updateContact = function(item){
 
-            if(item.updating){
-                item.updating = false;
-            } else{
-                item.updating = true;
-            }
+            $scope.selectedContact = item;
+            $location.path("/detailupdate");
+
         }
 
         $scope.presentDiv = function (num) {
