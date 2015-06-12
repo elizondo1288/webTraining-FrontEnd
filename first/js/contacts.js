@@ -6,42 +6,28 @@
         };
 
     //we set the module for the angular page
-    var contactsApp = angular.module("contactsApp", []);
+    var contactsApp = angular.module("contactsApp", ['ngRoute']);
+
+    contactsApp.config(function($routeProvider){
+
+        $routeProvider
+            .when('/',{
+                templateUrl:'partials/list.html'
+            })
+            .when('/add',{
+                templateUrl:'partials/add.html'
+            })
+            .otherwise({
+                redirectTo:'/'
+            })
+
+    });
 
 
-    /*contactsApp.filter('searchFor', function(){
-
-        // All filters must return a function. The first parameter
-        // is the data that is to be filtered, and the second is an
-        // argument that may be passed with a colon (searchFor:searchString)
-
-        return function(arr, searchString){
-
-            if(!searchString){
-                return arr;
-            }
-
-            var result = [];
-
-            searchString = searchString.toLowerCase();
-
-            // Using the forEach helper method to loop through the array
-            angular.forEach(arr, function(item){
-
-                if(item.title.toLowerCase().indexOf(searchString) !== -1){
-                    result.push(item);
-                }
-
-            });
-
-            return result;
-        };
-
-    });*/
     /*
     * We set the controller for this contact application
     */
-    contactsApp.controller("ContactsCtrl", function ($scope) {
+    contactsApp.controller("ContactsCtrl", function ($scope, $location, $route) {
 
         //we assigned the model to the controller
         $scope.model = model;
@@ -53,6 +39,14 @@
         $scope.wasInserted = false;
         $scope.tab = 1;
         
+        $scope.$on('$routeChangeSuccess', function() {
+            if ($location.path() == '/') {
+                $scope.tab = 1;
+            }else{
+                $scope.tab = 2;
+            }
+        });
+        
         
         $scope.isSelected=function(checkTab){
         return $scope.tab === checkTab;
@@ -61,6 +55,7 @@
         $scope.addNewContact = function (nam, add, em, ph) {
                 $scope.model.contacts.push({ name: nam, address: add, email:em, phone:ph, updating:false});
                 $scope.wasInserted = true;
+                $location.path("/");
                 $scope.clearInsertForm();
                 
                 

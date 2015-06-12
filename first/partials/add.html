@@ -1,0 +1,36 @@
+<div class="panel panel-default">
+
+            <div class="panel-heading">
+                <p class="panel-title">Add Contact
+                    <button type="button" class="btn btn-default pull-right btn-sm visible-xs" ng-click="presentDiv(1)">
+                        <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 
+                    </button>
+                </p>
+            </div>
+            <div class="panel-body">
+                <div ng-show="wasInserted" class="alert alert-success" role="alert">
+                    Contact was successfully added!
+                </div>
+                <form name="addContactForm"  ng-submit="addNewContact(nameF,adressF,emailF,phoneF)" class="form-vertical css-form" novalidate>
+                    
+                    <label>User Name</label>
+                    <input name="name" type="text" ng-model="nameF" class="form-control" placeholder="Esteban Elizondo" required/>
+                    <p ng-show="addContactForm.name.$dirty && addContactForm.name.$invalid">Your name is required.</p>
+
+                    <label>Address</label>
+                    <input name="adress" type="text" ng-model="adressF" class="form-control" placeholder="San Jose Costa Rica" required/>
+                    <p ng-show="addContactForm.adress.$dirty && addContactForm.adress.$invalid">Your address is required.</p>
+
+                    <label>Email</label>
+                    <input name="email" type="email" ng-model="emailF" class="form-control" placeholder="example@gmail.com" required/>
+                    <p ng-show="addContactForm.email.$dirty && addContactForm.email.$invalid">Your email is required with a valid format.</p>
+
+                    <label>Phone</label>
+                    <input name="phone" Phone="tel" ng-model="phoneF" class="form-control" placeholder="8888-7676"required/>
+                    <p ng-show="addContactForm.phone.$dirty && addContactForm.phone.$invalid">Your phone is required.</p>
+                    <br/>
+                    <button type="submit" class="btn btn-primary pull-right" ng-disabled="addContactForm.$invalid">Submit</button>
+
+                </form>
+            </div>
+</div>
