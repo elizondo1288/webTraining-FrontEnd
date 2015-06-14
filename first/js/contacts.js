@@ -30,10 +30,14 @@
     /*
     * We set the controller for this contact application
     */
-    contactsApp.controller("ContactsCtrl", function ($scope, $location, $route) {
+    contactsApp.controller("ContactsCtrl", ['$scope','$location','$route','$http',
+
+        function ($scope, $location, $route) {
 
         //we assigned the model to the controller
         $scope.model = model;
+
+        var SERVER_INFO = "http://localhost:8080/test/";
 
         //visibility variables to show / hide panels
         $scope.visibililtyAdd = false;
@@ -110,7 +114,100 @@
             $scope.addContactForm.$setUntouched();
         };
 
-    });//end of controller
+
+        //methods to connect with the database
+        $scope.addContactDB = function(contact){
+            
+            var req = {
+                        method: 'POST',
+                        url: SERVER_INFO+'greetingpost',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: {'name': contact.name,
+                                'address':contact.address,
+                                'email': contact.email,
+                                'phone':contact.phone
+                        }
+                    }
+
+                    $scope.loading = true;
+                    
+                    $http(req).
+                    success(function(data, status, headers, config){
+                        model.greetingPost = data;
+                    }).
+                    error(function(data, status, headers, config){
+                        alert(status);
+                    });
+        }
+
+        //methods to connect with the database
+        $scope.updateContactDB = function(contact,oldEmail){
+            
+            var req = {
+                        method: 'POST',
+                        url: SERVER_INFO+'greetingpost',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: {'name': contact.name,
+                                'address':contact.address,
+                                'email': contact.email,
+                                'phone':contact.phone,
+                                'oldEmail':oldEmail
+                        }
+                    }
+
+                    $scope.loading = true;
+                    
+                    $http(req).
+                    success(function(data, status, headers, config){
+                        model.greetingPost = data;
+                    }).
+                    error(function(data, status, headers, config){
+                        alert(status);
+                    });
+        }
+
+        //methods to connect with the database
+        $scope.deleteContactDB = function(email){
+            
+            var req = {
+                        method: 'POST',
+                        url: SERVER_INFO+'greetingpost',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: { 'email': contact.email
+                        }
+                    }
+
+                    $scope.loading = true;
+                    
+                    $http(req).
+                    success(function(data, status, headers, config){
+                        model.greetingPost = data;
+                    }).
+                    error(function(data, status, headers, config){
+                        alert(status);
+                    });
+        }
+
+        $scope.getContactsDB = function(){
+
+            $http.get(SERVER_INFO+'getContacts').
+              success(function(data, status, headers, config) {
+                
+              }).
+              error(function(data, status, headers, config) {
+                
+              });
+        }
+
+
+
+    }]);//end of controller
 
 
 })();
