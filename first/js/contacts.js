@@ -1,8 +1,7 @@
 (function(){
     
     var model = {
-            contacts: [{ name: "Esteban Elizondo", address: "San Jose Costa Rica", email:"elizondo1288@hotmail.com",phone:"8864-1981",updating:false},
-                    { name: "Pedro Perez", address: "Cartago", email:"pedrop@gmail.com",phone:"8832-1123",updating:false}]
+            contacts: []
         };
 
     //we set the module for the angular page
@@ -32,12 +31,12 @@
     */
     contactsApp.controller("ContactsCtrl", ['$scope','$location','$route','$http',
 
-        function ($scope, $location, $route) {
+        function ($scope, $location, $route, $http) {
 
         //we assigned the model to the controller
         $scope.model = model;
 
-        var SERVER_INFO = "http://localhost:8080/test/";
+        var SERVER_INFO = "http://localhost:8080/";
 
         //visibility variables to show / hide panels
         $scope.visibililtyAdd = false;
@@ -50,6 +49,10 @@
         
         $scope.$on('$routeChangeSuccess', function() {
             if (($location.path() == '/')||($location.path() == '/detailupdate')) {
+
+                if ($location.path() == '/') {
+                    $scope.getContactsDB();
+                };
                 $scope.tab = 1;
             }else{
                 $scope.tab = 2;
@@ -58,37 +61,8 @@
         
         
         $scope.isSelected=function(checkTab){
-        return $scope.tab === checkTab;
+            return $scope.tab === checkTab;
         };
-
-        $scope.changeUpdate = function(){
-            if($scope.isUpdating){
-                $scope.isUpdating = false;
-            } else{
-                $scope.isUpdating = true;
-            }
-        };
-
-        $scope.addNewContact = function (nam, add, em, ph) {
-                $scope.model.contacts.push({ name: nam, address: add, email:em, phone:ph, updating:false});
-                $scope.wasInserted = true;
-                $location.path("/");
-                $scope.clearInsertForm();
-                
-                
-        };
-
-        $scope.deleteContact = function(item){
-            var index=$scope.model.contacts.indexOf(item)
-            $scope.model.contacts.splice(index,1);
-        };
-
-        $scope.updateContact = function(item){
-
-            $scope.selectedContact = item;
-            $location.path("/detailupdate");
-
-        }
 
         $scope.presentDiv = function (num) {
 
@@ -110,32 +84,89 @@
             $scope.adressF='';
             $scope.emailF='';
             $scope.phoneF='';
-            $scope.addContactForm.$setPristine();
-            $scope.addContactForm.$setUntouched();
+            //$scope.addContactForm.$setPristine();
+            //$scope.addContactForm.$setUntouched();
         };
 
+        $scope.changeUpdate = function(){
+            if($scope.isUpdating){
+                $scope.isUpdating = false;
+            } else{
+                $scope.isUpdating = true;
+            }
+        };
+
+        $scope.addNewContact = function (nam, add, em, ph) {
+
+            if (!$scope.existsContactbyMail(em)) {
+
+                $scope.addContactDB(nam, add, em, ph);       
+
+            }else{
+                alert("That email is already registered");
+            }                
+        };
+
+        $scope.updateNewContact = function(selectedContact){
+
+            if (!$scope.existsContactbyMail(selectedContact.email)) {
+
+                $scope.updateContactDB(selectedContact,$scope.oldEmail); 
+
+            }else{
+
+                if (selectedContact.email == $scope.oldEmail) {
+                    //we are not changing the email
+                    $scope.updateContactDB(selectedContact,$scope.oldEmail);                     
+                }else{
+                    alert("That new email is already registered");    
+                }
+                
+            }
+        }
+
+        $scope.deleteContact = function(item){
+             $scope.deleteContactDB(item);
+        };
+
+        $scope.viewContact = function(item){
+
+            $scope.selectedContact = item;
+            $scope.oldEmail = item.email;
+            $location.path("/detailupdate");
+
+        }
+  
+
+        /*
+        *  DATA ACCESS METHODS
+        *
+        */
 
         //methods to connect with the database
-        $scope.addContactDB = function(contact){
+        $scope.addContactDB = function(nam, add, em, ph){
             
             var req = {
                         method: 'POST',
-                        url: SERVER_INFO+'greetingpost',
+                        url: SERVER_INFO+'addContact',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        data: {'name': contact.name,
-                                'address':contact.address,
-                                'email': contact.email,
-                                'phone':contact.phone
+                        data: {'name': nam,
+                                'address':add,
+                                'email': em,
+                                'phone':ph
                         }
                     }
-
-                    $scope.loading = true;
                     
                     $http(req).
                     success(function(data, status, headers, config){
-                        model.greetingPost = data;
+                        alert(data.message);
+
+                        $scope.model.contacts.push({ name: nam, address: add, email:em, phone:ph, updating:false});
+                        $scope.wasInserted = true;
+                        $location.path("/");
+                        $scope.clearInsertForm();
                     }).
                     error(function(data, status, headers, config){
                         alert(status);
@@ -146,8 +177,8 @@
         $scope.updateContactDB = function(contact,oldEmail){
             
             var req = {
-                        method: 'POST',
-                        url: SERVER_INFO+'greetingpost',
+                        method: 'PUT',
+                        url: SERVER_INFO+'updateContact',
                         headers: {
                             'Content-Type': 'application/json'
                         },
@@ -163,7 +194,8 @@
                     
                     $http(req).
                     success(function(data, status, headers, config){
-                        model.greetingPost = data;
+                        alert(data.message);
+                        $location.path("/");
                     }).
                     error(function(data, status, headers, config){
                         alert(status);
@@ -171,11 +203,11 @@
         }
 
         //methods to connect with the database
-        $scope.deleteContactDB = function(email){
+        $scope.deleteContactDB = function(contact){
             
             var req = {
-                        method: 'POST',
-                        url: SERVER_INFO+'greetingpost',
+                        method: 'DELETE',
+                        url: SERVER_INFO+'deleteContact',
                         headers: {
                             'Content-Type': 'application/json'
                         },
@@ -187,11 +219,28 @@
                     
                     $http(req).
                     success(function(data, status, headers, config){
-                        model.greetingPost = data;
+                        var index=$scope.model.contacts.indexOf(contact);
+                        $scope.model.contacts.splice(index,1);
+                        alert(data.message);
+                        $location.path("/");
                     }).
                     error(function(data, status, headers, config){
                         alert(status);
                     });
+        }
+
+        $scope.existsContactbyMail = function(email){
+            var founded = false;
+
+            angular.forEach($scope.model.contacts, function (contactRegistered){
+
+                if (contactRegistered.email == email) {
+                    founded= true;
+                    return founded;
+                };
+            });
+
+            return founded;
         }
 
         $scope.getContactsDB = function(){
@@ -199,6 +248,30 @@
             $http.get(SERVER_INFO+'getContacts').
               success(function(data, status, headers, config) {
                 
+                angular.forEach(data, function (contact){
+
+                    var founded = false;
+
+                    angular.forEach($scope.model.contacts, function (contactRegistered){
+
+                        if (contactRegistered.email == contact.email) {
+                            founded= true;
+
+                        };
+                    });
+                    
+                    alert(founded);
+                    if (!founded) {
+
+                        $scope.model.contacts.push({ name: contact.name,
+                                                     address: contact.address, 
+                                                     email:contact.email, 
+                                                     phone:contact.phone, 
+                                                     updating:false});
+
+                    };
+                    
+                });
               }).
               error(function(data, status, headers, config) {
                 
