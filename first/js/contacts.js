@@ -136,7 +136,20 @@
             $location.path("/detailupdate");
 
         }
-  
+        
+        $scope.existsContactbyMail = function(email){
+            var founded = false;
+
+            angular.forEach($scope.model.contacts, function (contactRegistered){
+
+                if (contactRegistered.email == email) {
+                    founded= true;
+                    return founded;
+                };
+            });
+
+            return founded;
+        }
 
         /*
         *  DATA ACCESS METHODS
@@ -229,20 +242,6 @@
                     });
         }
 
-        $scope.existsContactbyMail = function(email){
-            var founded = false;
-
-            angular.forEach($scope.model.contacts, function (contactRegistered){
-
-                if (contactRegistered.email == email) {
-                    founded= true;
-                    return founded;
-                };
-            });
-
-            return founded;
-        }
-
         $scope.getContactsDB = function(){
 
             $http.get(SERVER_INFO+'getContacts').
@@ -260,7 +259,6 @@
                         };
                     });
                     
-                    alert(founded);
                     if (!founded) {
 
                         $scope.model.contacts.push({ name: contact.name,

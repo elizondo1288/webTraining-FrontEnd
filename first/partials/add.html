@@ -2,15 +2,21 @@
 
             <div class="panel-heading">
                 <p class="panel-title">Add Contact
-                    <button type="button" class="btn btn-default pull-right btn-sm visible-xs" ng-click="presentDiv(1)">
+
+                    <!--button type="button" class="btn btn-default pull-right btn-sm visible-xs" ng-click="presentDiv(1)">
                         <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 
-                    </button>
+                    </button-->
+
+                    <a class="btn btn-default pull-right btn-sm visible-xs" href="#/">
+                        <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 
+                    </a>
+
                 </p>
             </div>
             <div class="panel-body">
-                <div ng-show="wasInserted" class="alert alert-success" role="alert">
+                <!--div ng-show="wasInserted" class="alert alert-success" role="alert">
                     Contact was successfully added!
-                </div>
+                </div-->
                 <form name="addContactForm"  ng-submit="addNewContact(nameF,adressF,emailF,phoneF)" class="form-vertical css-form" novalidate>
                     
                     <label>User Name</label>

@@ -1,22 +1,22 @@
 <div class="panel panel-default">
             <div class="panel-heading">
                 <p class="panel-title">Contacts List
-                    <button type="button" class="btn btn-default pull-right btn-sm visible-xs" ng-click="presentDiv(2)">
+
+                    <a class="btn btn-default pull-right btn-sm visible-xs" href="#/add">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 
-                    </button>
+                    </a>
                 </p>
                 
             </div>
             <div class="panel-body css-table">
 
-                <!-- Search Bar Code -->
                 <h5>Search your contact:</h5>
                 <div class="input-group">
                   <input type="text" ng-model="searchString" class="form-control" placeholder="Search for...">
                   <span class="input-group-btn">
                     <button class="btn btn-default" type="button">Go!</button>
                   </span>
-                </div><!-- /end of search bar code -->
+                </div>
                 <br/>
 
                 <table class="table table-striped">
