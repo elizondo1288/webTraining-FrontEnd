@@ -35,18 +35,11 @@
 
         //we assigned the model to the controller
         $scope.model = model;
-
         var SERVER_INFO = "http://localhost:8080/";
-
-        //visibility variables to show / hide panels
-        $scope.visibililtyAdd = false;
-        $scope.visibililtyList = true;
-
-        $scope.wasInserted = false;
         $scope.isUpdating = false;
-
         $scope.tab = 1;
         
+
         $scope.$on('$routeChangeSuccess', function() {
             if (($location.path() == '/')||($location.path() == '/detailupdate')) {
 
@@ -68,15 +61,8 @@
 
             $scope.tab = num;
             if (num == 1) {
-                $scope.visibililtyAdd = false;
-                $scope.visibililtyList = true;
                 $scope.clearInsertForm();
-            }else{
-                $scope.visibililtyAdd = true;
-                $scope.visibililtyList = false;
-            };
-
-            $scope.wasInserted = false;
+            }
         };
 
         $scope.clearInsertForm = function(){
@@ -109,11 +95,16 @@
 
         $scope.updateNewContact = function(selectedContact){
 
-            if (!$scope.existsContactbyMail(selectedContact.email)) {
+        	var exists = $scope.existsContactbyMail(selectedContact.email);
+        	console.log(exists);
+
+            if (!exists) {
 
                 $scope.updateContactDB(selectedContact,$scope.oldEmail); 
 
             }else{
+
+            	console.log("---------- " + $scope.oldEmail);
 
                 if (selectedContact.email == $scope.oldEmail) {
                     //we are not changing the email
@@ -131,23 +122,30 @@
 
         $scope.viewContact = function(item){
 
-            $scope.selectedContact = item;
+        	$scope.selectedContact = angular.copy(item);
+
+
+           /* $scope.selectedContact.name = item.name;
+            $scope.selectedContact.address = item.address;
+            $scope.selectedContact.email = item.email;
+            $scope.selectedContact.phone = item.phone;*/
+
             $scope.oldEmail = item.email;
             $location.path("/detailupdate");
-
         }
         
         $scope.existsContactbyMail = function(email){
             var founded = false;
 
             angular.forEach($scope.model.contacts, function (contactRegistered){
+                
+                console.log(contactRegistered.email + " - " + email);
 
                 if (contactRegistered.email == email) {
                     founded= true;
                     return founded;
                 };
             });
-
             return founded;
         }
 
@@ -172,18 +170,17 @@
                         }
                     }
                     
-                    $http(req).
-                    success(function(data, status, headers, config){
-                        alert(data.message);
+            $http(req).
+            success(function(data, status, headers, config){
+                alert(data.message);
 
-                        $scope.model.contacts.push({ name: nam, address: add, email:em, phone:ph, updating:false});
-                        $scope.wasInserted = true;
-                        $location.path("/");
-                        $scope.clearInsertForm();
-                    }).
-                    error(function(data, status, headers, config){
-                        alert(status);
-                    });
+                $scope.model.contacts.push({ name: nam, address: add, email:em, phone:ph, updating:false});
+                $location.path("/");
+                $scope.clearInsertForm();
+            }).
+            error(function(data, status, headers, config){
+                alert(status);
+            });
         }
 
         //methods to connect with the database
@@ -203,16 +200,16 @@
                         }
                     }
 
-                    $scope.loading = true;
-                    
-                    $http(req).
-                    success(function(data, status, headers, config){
-                        alert(data.message);
-                        $location.path("/");
-                    }).
-                    error(function(data, status, headers, config){
-                        alert(status);
-                    });
+            $scope.loading = true;
+            
+            $http(req).
+            success(function(data, status, headers, config){
+                alert(data.message);
+                $location.path("/");
+            }).
+            error(function(data, status, headers, config){
+                alert(status);
+            });
         }
 
         //methods to connect with the database
@@ -228,51 +225,39 @@
                         }
                     }
 
-                    $scope.loading = true;
-                    
-                    $http(req).
-                    success(function(data, status, headers, config){
-                        var index=$scope.model.contacts.indexOf(contact);
-                        $scope.model.contacts.splice(index,1);
-                        alert(data.message);
-                        $location.path("/");
-                    }).
-                    error(function(data, status, headers, config){
-                        alert(status);
-                    });
+            $scope.loading = true;
+            
+            $http(req).
+            success(function(data, status, headers, config){
+                var index=$scope.model.contacts.indexOf(contact);
+                $scope.model.contacts.splice(index,1);
+                alert(data.message);
+                $location.path("/");
+            }).
+            error(function(data, status, headers, config){
+                alert(status);
+            });
         }
 
         $scope.getContactsDB = function(){
+
+        	$scope.model.contacts = [];
 
             $http.get(SERVER_INFO+'getContacts').
               success(function(data, status, headers, config) {
                 
                 angular.forEach(data, function (contact){
 
-                    var founded = false;
-
-                    angular.forEach($scope.model.contacts, function (contactRegistered){
-
-                        if (contactRegistered.email == contact.email) {
-                            founded= true;
-
-                        };
-                    });
-                    
-                    if (!founded) {
-
-                        $scope.model.contacts.push({ name: contact.name,
+                    $scope.model.contacts.push({ name: contact.name,
                                                      address: contact.address, 
                                                      email:contact.email, 
                                                      phone:contact.phone, 
                                                      updating:false});
 
-                    };
-                    
                 });
               }).
               error(function(data, status, headers, config) {
-                
+                	alert(status);
               });
         }
 
